@@ -1,0 +1,11 @@
+build/
+*.apk
+*.aab
+*.jks
+*.keystore
+*.p12
+*.pfx
+__pycache__/
+.pytest_cache/
+*.pyc
+.env
