@@ -190,7 +190,7 @@ def main():
  if key_b64:
   ks.write_bytes(base64.b64decode(key_b64,validate=True))
   store=os.environ['APKLAB_STORE_PASSWORD']
-  keypass=os.environ.get('APKLAB_KEY_PASSWORD',store)
+  keypass=os.getenv('APKLAB_KEY_PASSWORD') or store
   alias=os.environ['APKLAB_KEY_ALIAS']
   print('Signing with external release keystore')
  else:
