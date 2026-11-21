@@ -177,6 +177,7 @@ def xml_manifest():
  body=b''.join(chunks);return struct.pack('<HHI',3,8,8+len(body))+body
 
 def main():
+ (ROOT/'build').mkdir(parents=True,exist_ok=True)
  dex=Dex().make();xml=xml_manifest();(ROOT/'build'/'classes.dex').write_bytes(dex);(ROOT/'build'/'AndroidManifest.xml').write_bytes(xml)
  with zipfile.ZipFile(OUT,'w') as z:
   z.writestr('AndroidManifest.xml',xml,compress_type=zipfile.ZIP_STORED)
