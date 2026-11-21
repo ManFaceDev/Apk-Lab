@@ -1,0 +1,38 @@
+name: Build APK Lab
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Compile and sign APK
+        env:
+          APKLAB_RELEASE_KEYSTORE_B64: ${{ secrets.APKLAB_RELEASE_KEYSTORE_B64 }}
+          APKLAB_STORE_PASSWORD: ${{ secrets.APKLAB_STORE_PASSWORD }}
+          APKLAB_KEY_PASSWORD: ${{ secrets.APKLAB_KEY_PASSWORD }}
+          APKLAB_KEY_ALIAS: ${{ secrets.APKLAB_KEY_ALIAS }}
+        run: python build_apk.py
+      - name: Check APK
+        run: |
+          unzip -t APK_Lab_0.1.apk
+          jarsigner -verify APK_Lab_0.1.apk
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: APK-Lab-${{ github.run_number }}
+          path: APK_Lab_0.1.apk
+          if-no-files-found: error
